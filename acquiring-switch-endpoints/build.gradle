@@ -1,0 +1,96 @@
+buildscript {
+    dependencies {
+        classpath "com.avantir:swagger-codegen-plugin:0.0.1"
+        classpath "com.avantir:swagger-code-gen:1.0-SNAPSHOT"
+    }
+}
+
+
+plugins {
+    id 'com.avantir.swagger-codegen' version '0.0.1'
+    id 'maven'
+    id 'java'
+}
+
+
+apply plugin: 'com.avantir.swagger-codegen'
+
+
+jar {
+    from "${project.buildDir.path}/classes/java/swagger"
+}
+
+
+
+swagger {
+    inputSpec = "${projectDir}/../swagger/acquiringswitch.yaml"
+    outputDir = file("${project.buildDir.path}/generated-sources/swagger")
+    lang = 'avantir-server-java'
+
+    additionalProperties = [
+            'apiPackage'       : 'com.arca.acquiringswitch.api',
+            'modelPackage'     : 'com.arca.acquiringswitch.models',
+            'invokerPackage'   : 'com.arca.acquiringswitch.invoker',
+            'basePackage'      : 'com.arca',
+            'dateLibrary'      : 'java8',
+            'configPackage'    : 'com.arca.acquiringswitch.config',
+            'library'          : 'avantir-spring-mvc'
+    ]
+}
+
+sourceSets {
+    swagger {
+        java {
+            srcDir file("${project.buildDir.path}/generated-sources/swagger/src/main/java")
+        }
+    }
+}
+
+classes.dependsOn('swagger')
+
+ext {
+    spring_boot_version = '2.1.2.RELEASE'
+    jackson_version = '2.4.2'
+    jersey_version = '1.18'
+    jodatime_version = '2.3'
+    junit_version = '4.8.1'
+}
+
+dependencies {
+
+    swaggerCompile group: 'io.swagger', name: 'swagger-annotations', version: '1.5.4'
+    swaggerCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${spring_boot_version}"
+    swaggerCompile (group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${spring_boot_version}") {
+        exclude group: 'org.hibernate', module: 'hibernate-core'
+    }
+
+    swaggerCompile (group: 'com.arca', name: 'framework-common', version: '1.0.0-SNAPSHOT') {
+        exclude group: 'org.hibernate', module: 'hibernate-core'
+    }
+    swaggerCompile (group: 'com.arca', name: 'framework-data', version: '1.0.0-SNAPSHOT'){
+        exclude group: 'org.hibernate', module: 'hibernate-core'
+    }
+    swaggerCompile (group: 'com.arca', name: 'framework-web', version: '1.0.0-SNAPSHOT'){
+        exclude group: 'org.hibernate', module: 'hibernate-core'
+    }
+    swaggerCompile group: 'com.arca', name: 'framework-messaging', version: '1.0.0-SNAPSHOT'
+
+    compile sourceSets.swagger.output
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: mavenLocal().url)
+        }
+    }
+}
+
+build.finalizedBy(uploadArchives)
+
+
+compileJava.dependsOn('swagger')
+

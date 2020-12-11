@@ -1,0 +1,45 @@
+
+allprojects {
+    group = 'com.arca'
+    version = '1.0.0-SNAPSHOT'
+
+    repositories {
+
+        mavenLocal()
+        maven {
+            url "https://${nexusUrl}/repository/maven-public/"
+            credentials {
+                username nexusUsername
+                password nexusPassword
+            }
+        }
+        maven { url 'http://jpos.org/maven' }
+        maven { url 'http://download.oracle.com/maven' }
+        mavenCentral()
+        jcenter()
+        maven { url "https://repo.spring.io/plugins-release" }
+        maven { url "https://repo.spring.io/libs-release" }
+    }
+}
+
+subprojects {
+
+    apply plugin: 'java'
+//    apply plugin: 'maven'
+//    apply plugin: 'maven-publish'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+//    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    dependencies {
+
+        testCompile 'junit:junit:4.12'
+        compile 'junit:junit:4.12'
+    }
+}
+
+
+

@@ -1,0 +1,75 @@
+swagger: '2.0'
+info:
+  title: AcquiringSwitch management API
+  description: Describes the AcquiringSwitch management functions
+  version: "0.0.1-SNAPSHOT"
+
+host: localhost:31009
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+
+paths:
+  /acquiringSwitch:
+    post:
+      x-method-name: "doAcquiringSwitch"
+      description: |
+        Create new AcquiringSwitch
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      tags:
+        - AcquiringSwitch
+      parameters:
+        - name: acquiringSwitch
+          in: body
+          description: The AcquiringSwitch object
+          schema:
+            $ref: '#/definitions/SAAcquiringSwitch'
+          required: true
+      responses:
+        200:
+          description: The response was succesfully processed.
+          schema:
+            $ref: "#/definitions/SAAcquiringSwitch"
+        400:
+          description: Bad request - credentials were not passed
+        401:
+          description: Unauthorized request - the authentication failed
+        500:
+          description: An internal error has occurred.
+    get:
+      x-method-name: "doAcquiringSwitchGet"
+      description: |
+        Get a AcquiringSwitch
+      produces:
+        - application/json
+      tags:
+        - AcquiringSwitch
+      responses:
+        200:
+          description: The response was succesfully processed.
+          schema:
+            $ref: '#/definitions/SAAcquiringSwitch'
+        404:
+          description: AcquiringSwitch does not exist
+        500:
+          description: An internal error has occurred.
+
+
+definitions:
+  SAAcquiringSwitch:
+    properties:
+      id:
+        type: string
+        description: Unique database ID
+      version:
+        type: integer
+        format: int64
+        description: update version number
+      description:
+        type: string
+        description: decription.

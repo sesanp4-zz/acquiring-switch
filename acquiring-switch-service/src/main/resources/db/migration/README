@@ -1,0 +1,2 @@
+Put an initial schema in here as V1__initial.sql
+Then all other schemas should start from V1_0_2_<some_name>.sql

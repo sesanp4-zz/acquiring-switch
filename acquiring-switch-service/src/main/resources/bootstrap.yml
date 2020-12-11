@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: acquiring-switch-service
+# Config server
+  cloud:
+    config:
+      uri: http://acquiring-config-server.acquiring-microservice.svc.cluster.local:31000
+      fail-fast: true
+
+cloud.aws:
+  region:
+    static: eu-west-1
+    auto: false
+  stack.auto: false
+
+hsm:
+  gemalto:
+    enabled: true
